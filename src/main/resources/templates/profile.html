@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout.html">
+    <div layout:fragment="content">
+
+        <input type="hidden" id="userID" th:value="${#authentication.principal.id}">
+
+        <div class="container mt-5" style="width: 800px;">
+
+            <div class="row">
+
+                <div class="col-5">
+                    <img src="/images/user.png" width="250px">
+                </div>
+
+                <div class="col-7">
+
+                    <div class="row mb-2">
+                        FULL NAME:
+                    </div>
+                    <div class="row mb-3">
+                        <input class="form-control" readonly type="text" id="fullName">
+                    </div>
+
+                    <div class="row mb-2">
+                        EMAIL:
+                    </div>
+                    <div class="row mb-5">
+                        <input class="form-control" readonly type="text" id="email">
+                    </div>
+
+                    <div class="row mb-2">
+                        <div class="col-4" style="margin-left: -12px">
+                            <a style="width: 150px" th:href="@{'/update-profile-page'}" class="btn btn-sm btn-primary">UPDATE PROFILE</a>
+                        </div>
+                        <div class="col-4">
+                            <a style="width: 150px" th:href="@{'/update-password-page'}" class="btn btn-sm btn-primary">UPDATE PASSWORD</a>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <script type="text/javascript">
+
+            loadingData();
+
+            function loadingData() {
+                const userId = document.getElementById("userID").getAttribute("value");
+
+                const httpRequest = new XMLHttpRequest();
+                httpRequest.open("GET", "/user/" + userId, true);
+                httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                        let user = JSON.parse(httpRequest.responseText);
+                        document.getElementById("fullName").value = user.fullName;
+                        document.getElementById("email").value = user.email;
+                    }
+                };
+
+                httpRequest.send();
+            }
+
+        </script>
+
+    </div>
+
+</html>

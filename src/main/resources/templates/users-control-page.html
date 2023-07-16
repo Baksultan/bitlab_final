@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="layout.html">
+<div layout:fragment="content">
+
+  <div class="container mt-5" id="alert"></div>
+
+  <div class="container mt-5" >
+
+    <input type="hidden" id = "userId">
+
+    <div class="row mt-3">
+
+      <div class="container text-center mt-5 mb-3">
+        <h3>ALL USERS</h3>
+      </div>
+
+      <div class="col-12">
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          <table class="table table-striped">
+            <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">FULL NAME</th>
+              <th scope="col">EMAIL</th>
+              <th scope="col">DETAILS</th>
+            </tr>
+            </thead>
+            <tbody class="table-group-divider" id="userListBody">
+            </tbody>
+          </table>
+        </div>
+
+        <div class="container text-center mt-5 mb-3">
+          <h3>ALL ADMINS</h3>
+        </div>
+
+        <div class="col-12">
+          <div class="row row-cols-1 row-cols-md-2 g-4">
+            <table class="table table-striped mb-5">
+              <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">FULL NAME</th>
+                <th scope="col">EMAIL</th>
+                <th scope="col">ROLE</th>
+              </tr>
+              </thead>
+              <tbody class="table-group-divider" id="adminListBody">
+              </tbody>
+            </table>
+          </div>
+
+        <div class="modal fade" id="detailsModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content" sec:authorize="hasAnyRole('ROLE_ADMIN')">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel">User Details</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <label>FULL NAME: </label>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-12">
+                    <input type="text" class="form-control" id="userFullNameDetails">
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <label>EMAIL : </label>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-12">
+                    <input class="form-control" id="userEmailDetails">
+                  </div>
+                </div>
+                <div class="row mt-3">
+                  <div class="col-12">
+                    <label>PERMISSIONS : </label>
+                  </div>
+                </div>
+                <div class="row mt-2">
+                  <div class="col-12" id="userRoleDetails">
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="managerSwitchCheck">
+                      <label class="form-check-label" for="managerSwitchCheck">ROLE MANAGER</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="teacherSwitchCheck">
+                      <label class="form-check-label" for="adminSwitchCheck">ROLE TEACHER</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" role="switch" id="adminSwitchCheck">
+                      <label class="form-check-label" for="adminSwitchCheck">ROLE ADMIN</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" onclick="deleteUser()">DELETE</button>
+                <button type="button" class="btn btn-primary" onclick="updateUser()">SAVE</button>
+              </div>
+              <script type="text/javascript">
+                function updateUser(){
+
+                  let userId = document.getElementById("userId").value;
+                  let userFullName = document.getElementById("userFullNameDetails").value;
+                  let userEmail = document.getElementById("userEmailDetails").value;
+                  let userPermissions = [];
+
+                  if (document.getElementById("adminSwitchCheck").checked) {
+                    userPermissions.push({ id: 1, role: "ROLE_ADMIN" });
+                  }
+                  if (document.getElementById("teacherSwitchCheck").checked) {
+                    userPermissions.push({ id: 3, role: "ROLE_TEACHER" });
+                  }
+                  if (document.getElementById("managerSwitchCheck").checked) {
+                    userPermissions.push({ id: 4, role: "ROLE_MANAGER" });
+                  }
+
+                  const userDTO = {
+                    id: userId,
+                    fullName: userFullName,
+                    email: userEmail,
+                    permissions: userPermissions
+                  };
+
+                  const httpRequest = new XMLHttpRequest();
+                  httpRequest.open("PUT", "/user/second-update/" + userId, true);
+                  httpRequest.setRequestHeader("Content-Type", "application/json");
+
+                  httpRequest.onreadystatechange = function () {
+                    if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                      document.getElementById("alert").innerHTML = "<div class=\"alert alert-success alert-dismissible fade show\" role=\"alert\">\n" +
+                              "  <strong>User updated successfully!</strong>\n" +
+                              "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                              "</div>";
+                      detailsModal.hide();
+                      loadUsers();
+                    } else {
+                      document.getElementById("alert").innerHTML = "<div class=\"alert alert-danger alert-dismissible fade show\" role=\"alert\">\n" +
+                              "  <strong>Failed to update user.</strong>\n" +
+                              "  <button type=\"button\" class=\"btn-close\" data-bs-dismiss=\"alert\" aria-label=\"Close\"></button>\n" +
+                              "</div>";
+                      detailsModal.hide();
+                      loadUsers();
+                    }
+                  };
+
+                  httpRequest.send(JSON.stringify(userDTO));
+
+                }
+
+                function deleteUser(){
+
+                  let approve = confirm("Are you sure?");
+
+                  if(approve){
+
+                    let userId = document.getElementById("userId");
+
+                    const httpRequest = new XMLHttpRequest();
+                    httpRequest.open("DELETE", "/user/"+userId.value, true);
+
+                    httpRequest.onreadystatechange = function () {
+                      if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+                        detailsModal.hide();
+                        loadUsers();
+                      }
+                    };
+
+                    httpRequest.send();
+                  }
+
+                }
+              </script>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+
+      let detailsModal;
+
+      loadUsers();
+
+      function loadUsers() {
+
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open("GET", "/user", true);
+        httpRequest.onreadystatechange = function () {
+          if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+
+            let userList = JSON.parse(httpRequest.responseText);
+
+            let allUsersTableContent = "";
+
+            let adminsTableContent = "";
+
+            for (let i = 0; i < userList.length; i++) {
+              let isAdmin = false;
+              for (let j = 0; j < userList[i].permissions.length; j++) {
+                if (userList[i].permissions[j].role === 'ROLE_ADMIN') {
+                  isAdmin = true;
+                  break;
+                }
+              }
+              if (!isAdmin) {
+                allUsersTableContent += "<tr><th scope=\"row\">" + userList[i].id + "</th>";
+                allUsersTableContent += "<td>" + userList[i].fullName + "</td>";
+                allUsersTableContent += "<td>" + userList[i].email + "</td>";
+                allUsersTableContent += "<td><a href=\"#\" class=\"btn btn-primary\" onclick='openUserDetailsModal(" + userList[i].id + ")'>DETAILS</a></td>";
+              }
+            }
+
+            for (let i = 0; i < userList.length; i++) {
+              if (userList[i].permissions.some(permission => permission.role === 'ROLE_ADMIN')) {
+                adminsTableContent += "<tr><th scope=\"row\">" + userList[i].id + "</th>";
+                adminsTableContent += "<td>" + userList[i].fullName + "</td>";
+                adminsTableContent += "<td>" + userList[i].email + "</td>";
+                adminsTableContent += "<td>ADMIN</td>";
+
+              }
+            }
+
+            document.getElementById("userListBody").innerHTML = allUsersTableContent;
+            document.getElementById("adminListBody").innerHTML = adminsTableContent;
+          }
+        }
+        httpRequest.send();
+      }
+
+      function openUserDetailsModal(id){
+
+        detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+
+        const httpRequest = new XMLHttpRequest();
+        httpRequest.open("GET", "/user/"+id, true);
+        httpRequest.onreadystatechange = function () {
+          if (httpRequest.readyState == XMLHttpRequest.DONE && httpRequest.status == 200) {
+            let result = JSON.parse(httpRequest.responseText);
+            userFullNameDetails.value = result.fullName;
+            userEmailDetails.value = result.email;
+            userId.value = result.id;
+
+            if (result.permissions.some(permission => permission.role === 'ROLE_ADMIN')) {
+              document.getElementById("adminSwitchCheck").checked = true;
+            } else {
+              document.getElementById("adminSwitchCheck").checked = false;
+            }
+
+            if (result.permissions.some(permission => permission.role === 'ROLE_MANAGER')) {
+              document.getElementById("managerSwitchCheck").checked = true;
+            } else {
+              document.getElementById("managerSwitchCheck").checked = false;
+            }
+
+            if (result.permissions.some(permission => permission.role === 'ROLE_TEACHER')) {
+              document.getElementById("teacherSwitchCheck").checked = true;
+            } else {
+              document.getElementById("teacherSwitchCheck").checked = false;
+            }
+
+            detailsModal.show();
+
+          }
+        }
+        httpRequest.send();
+      }
+
+    </script>
+
+    </div>
+
+  </div>
+</div>
+</html>

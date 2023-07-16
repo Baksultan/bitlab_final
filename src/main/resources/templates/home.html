@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="layout.html">
+<div layout:fragment="content">
+
+  <div style="background-color: #171729; padding-top: 220px; padding-bottom: 220px">
+
+    <div class="container text-light">
+
+      <div class="row">
+
+        <div class="col-7" style="">
+          <h1 class="mb-4" style="font-size: 40px; font-weight: 700">
+            BITLAB ACADEMY - это новый подход к IT образованию!
+          </h1>
+          <p class="mb-4" style="font-size: 27px">
+            Обучайся, развивайся и строй успешную карьеру в IT!
+          </p>
+          <a class="btn text-light pt-2 pb-2" th:href="@{'/courses-page'}" style="background-color: #0ACCDA; width: 250px;">
+            Список курсов
+          </a>
+        </div>
+
+        <div class="col-5" style="">
+          <img src="/images/main_user.svg" width="100%" height="100%">
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div style="background-color: #fff; padding-top: 100px; padding-bottom: 100px">
+
+    <div class="container text-dark">
+
+      <div class="row mb-5">
+        <h1 style="font-size: 40px; font-weight: 700">
+          Кому подходит обучение
+        </h1>
+      </div>
+
+      <div class="row">
+
+        <div class="col-4">
+          <div class="card" style="height: 230px">
+            <div class="card-body mt-3 mb-3">
+              <h5 class="card-title mb-3">Новичкам в программировании</h5>
+              <p class="card-text">
+                Вы только начинаете свой путь в программировании и хотите получить четкие инструкции как начать
+                программировать и работать с этим. Вы сможете приступить к обучению абсолютно с нуля.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="card" style="height: 230px">
+            <div class="card-body mt-3 mb-3">
+              <h5 class="card-title mb-3">Уже имеющим опыт в программировании</h5>
+              <p class="card-text">
+                У вас уже есть база, а наши тренеры-эксперты помогут вам глубже погрузиться в изучении языка Java.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-4">
+          <div class="card" style="height: 230px">
+            <div class="card-body mt-3 mb-3">
+              <h5 class="card-title mb-3">Кто хочет сменить профессию</h5>
+              <p class="card-text">
+                Вы устали от скучной работы с 9 до 6 и хотите начать работать над интересными IT проектами.
+                Java - это хороший старт, ведь он отличается своей легкостью и гибкостью в изучении.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div style="background-color: #171729; padding-top: 150px; padding-bottom: 150px">
+
+    <div class="container text-light">
+
+      <div class="row mb-3">
+        <h1 style="font-size: 40px; font-weight: 700">
+          Преимущества обучения в BITLAB ACADEMY
+        </h1>
+      </div>
+      <div class="row mb-5">
+        <p class="mb-4" style="font-size: 27px">Причины, по которым люди выбирают нас</p>
+      </div>
+
+
+      <div class="container">
+        <div class="row gy-5">
+
+          <div class="col-6">
+            <div class="col" style="margin-right: 70px">
+              <div class="row mb-3">
+                <img src="/images/discount.svg" height="75px">
+              </div>
+              <div class="row mb-2">
+                <h4>Собственная методология обучения</h4>
+              </div>
+              <div class="row">
+                <p>
+                  Наши курсы составлены профессионалами из индустрии IT и образования. Методисты со степенью
+                  PhD совместно с Middle & Senior Разработчиками создают наши курсы, которые интересно изучать,
+                  а самое главное - полученные знания точно найдут применения в индустрии
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="col" style="margin-left: 70px">
+              <div class="row mb-3">
+                <img src="/images/darts.svg" height="75px">
+              </div>
+              <div class="row mb-2">
+                <h4>Помощь в трудоустройстве</h4>
+              </div>
+              <div class="row">
+                <p>
+                  Наши тренеры - это не только действующие профи из индустрии, но еще отличные наставники, которые
+                  могут человеческим языком объяснить самые сложные материалы. Задача тренера - это развить в вас
+                  мышление программиста, а не просто обучить технологиям
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="col" style="margin-right: 70px">
+              <div class="row mb-3">
+                <img src="/images/calendarAdvantages.svg" height="75px">
+              </div>
+              <div class="row mb-2">
+                <h4>Онлайн платформа для каждого студента</h4>
+              </div>
+              <div class="row">
+                <p>
+                  Каждому студенту предоставляется доступ к нашей платформе со всеми видеоуроками, лекциями,
+                  задачами и тестами. Решение задач проходит сразу на платформе, а видеоуроки/лекции помогают
+                  освежать память и делает обучение намного эффективнее
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-6">
+            <div class="col" style="margin-left: 70px">
+              <div class="row mb-3">
+                <img src="/images/message.svg" height="75px">
+              </div>
+              <div class="row mb-2">
+                <h4>Тренеры - действующие программисты</h4>
+              </div>
+              <div class="row">
+                <p>
+                  Самых лучших студентов мы трудоустраиваем в IT компании Казахстана уже на 6 месяце обучения.
+                  Составляем резюме, готовимся к интервью, развиваем Soft Skills и многое другое
+                </p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+
+</div>
+</html>
